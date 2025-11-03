@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql pdo mbstring exif pcntl bcmath gd
 
 # Install Redis extension
 RUN pecl install redis && docker-php-ext-enable redis
@@ -31,14 +31,30 @@ WORKDIR /var/www/html
 # Copy existing application directory contents
 COPY . /var/www/html
 
+# Create required Laravel directories
+RUN mkdir -p bootstrap/cache \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs
+
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/sites-available/default
 
 # Install dependencies
-RUN composer install --no-interaction --optimize-autoloader --no-dev || true
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+
+# Ensure .env file exists (Laravel requires it)
+RUN touch .env && \
+    echo "APP_NAME=LawnStarterStarWars" >> .env && \
+    echo "APP_ENV=production" >> .env && \
+    echo "APP_DEBUG=false" >> .env && \
+    echo "APP_KEY=" >> .env
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache || true
+RUN chown -R www-data:www-data \
+    /var/www/html/storage \
+    /var/www/html/bootstrap/cache
 
 # Copy supervisor configuration
 RUN echo '[supervisord]\n\
