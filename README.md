@@ -48,22 +48,33 @@ A full-stack web application that allows users to search and explore Star Wars c
 git clone https://github.com/xinen8721/lawn-starter-starwars.git
 cd lawn-starter-starwars
 
-# Run the setup script
-./init.sh
+# Start the application
+docker-compose up --build
 ```
 
-The `init.sh` script will automatically:
-- Start all Docker containers
-- Set up the Laravel backend
-- Configure Redis
-- Run database migrations
-- Set up environment variables
+That's it! The application will automatically:
+- ✅ Build all Docker containers
+- ✅ Install dependencies
+- ✅ Set up the Laravel backend
+- ✅ Configure Redis
+- ✅ Run database migrations
+- ✅ Generate application keys
 
 ### Access the Application
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8000
 - **Statistics**: http://localhost:5173/statistics
+
+### Configuration
+
+All configuration is managed through the `.env` file in the project root. The default settings work out of the box, but you can customize:
+
+- **Ports**: Change `FRONTEND_PORT`, `BACKEND_PORT`, or `REDIS_PORT` if you have conflicts
+- **API URL**: Modify `VITE_API_URL` for the frontend
+- **External API**: Change `SWAPI_BASE_URL` if needed
+
+The `.env` file is committed to the repository for easy setup (contains no secrets).
 
 ## Architecture
 
@@ -278,16 +289,29 @@ The queue worker and scheduler run as separate Docker containers ensuring contin
 # Stop all containers
 docker-compose down
 
-# Remove volumes (clears Redis data)
-docker-compose down -v
+# Clean everything and start fresh
+docker-compose down -v --rmi all --remove-orphans
 
 # Rebuild and start
-docker-compose up -d --build
+docker-compose up --build
+```
+
+### Port Conflicts
+If you see port conflicts, update the `.env` file:
+```bash
+# Change ports in .env
+FRONTEND_PORT=3000
+BACKEND_PORT=8080
+REDIS_PORT=6380
+
+# Restart
+docker-compose up --build
 ```
 
 ### Frontend Can't Connect to Backend
 - Ensure all containers are running: `docker-compose ps`
 - Check backend health: `curl http://localhost:8000/api/statistics`
+- Update `VITE_API_URL` in `.env` if using custom ports
 - Verify CORS middleware is configured
 
 ### Queue Jobs Not Running
