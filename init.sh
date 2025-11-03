@@ -44,9 +44,9 @@ docker-compose exec -T backend bash -c "[ -f .env ] || cp .env.example .env"
 echo "   Generating application key..."
 docker-compose exec -T backend php artisan key:generate --no-interaction
 
-# Wait for PostgreSQL
-echo "   Waiting for PostgreSQL..."
-until docker-compose exec -T postgres pg_isready > /dev/null 2>&1; do
+# Wait for Redis
+echo "   Waiting for Redis..."
+until docker-compose exec -T redis redis-cli ping > /dev/null 2>&1; do
     sleep 2
 done
 

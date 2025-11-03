@@ -21,11 +21,11 @@ function Header() {
           isOpen={isSidebarOpen}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        <h1 
-          className={styles.brandTitle} 
-          onClick={() => navigate('/')} 
-          role="button" 
-          tabIndex={0} 
+        <h1
+          className={styles.brandTitle}
+          onClick={() => navigate('/')}
+          role="button"
+          tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()

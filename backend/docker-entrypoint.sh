@@ -11,7 +11,13 @@ until redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" ping 2>/dev/null; do
 done
 echo "✅ Redis is ready!"
 
-# Start supervisord
-echo "🎬 Starting services..."
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+# If a command was passed, run it instead of supervisor
+if [ $# -gt 0 ]; then
+    echo "🎬 Running command: $@"
+    exec "$@"
+else
+    # Start supervisord (for the main backend container)
+    echo "🎬 Starting services..."
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+fi
 
