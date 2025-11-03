@@ -4,13 +4,13 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:5173"
     restart: unless-stopped
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:8000
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
     depends_on:
       - backend
     networks:
@@ -21,16 +21,18 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:80"
+      - "${BACKEND_PORT:-8000}:80"
     restart: unless-stopped
     volumes:
       - ./backend:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/bootstrap/cache
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - CACHE_DRIVER=redis
-      - QUEUE_CONNECTION=redis
-      - SWAPI_BASE_URL=https://swapi.dev/api
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+      - SWAPI_BASE_URL=${SWAPI_BASE_URL:-https://swapi.dev/api}
     depends_on:
       - redis
     networks:
@@ -44,10 +46,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./backend:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/bootstrap/cache
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
     depends_on:
       - redis
       - backend
@@ -62,10 +66,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./backend:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/bootstrap/cache
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
     depends_on:
       - redis
       - backend
@@ -76,7 +82,7 @@ services:
     image: redis:7-alpine
     command: redis-server --appendonly yes --appendfsync everysec --save 60 1000
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     restart: unless-stopped
     volumes:
       - redis-data:/data

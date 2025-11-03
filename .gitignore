@@ -3,7 +3,8 @@ node_modules/
 vendor/
 
 # Environment files
-.env
+# Root .env is tracked for easy demo/interview setup
+backend/.env
 .env.local
 .env.*.local
 
