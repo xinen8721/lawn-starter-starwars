@@ -1,0 +1,75 @@
+{
+  "header": {
+    "title": "SWStarter"
+  },
+  "nav": {
+    "home": "主页",
+    "preferences": "设置"
+  },
+  "search": {
+    "label": "您想搜索什么？",
+    "people": "人物",
+    "movies": "电影",
+    "placeholderPeople": "例如：卢克·天行者、尤达、丘巴卡",
+    "placeholderMovies": "例如：帝国、绝地、希望",
+    "buttonSearch": "搜索",
+    "buttonSearching": "搜索中...",
+    "resultsTitle": "结果"
+  },
+  "results": {
+    "seeDetails": "查看详情",
+    "backToSearch": "返回搜索"
+  },
+  "empty": {
+    "noMatches": "没有找到匹配项。",
+    "useForm": "使用表单搜索人物或电影。"
+  },
+  "loading": {
+    "searching": "搜索中..."
+  },
+  "person": {
+    "details": "详细信息",
+    "movies": "电影",
+    "birthYear": "出生年份",
+    "gender": "性别",
+    "eyeColor": "眼睛颜色",
+    "hairColor": "头发颜色",
+    "height": "身高",
+    "mass": "体重",
+    "loading": "加载中...",
+    "notFound": "未找到人物"
+  },
+  "movie": {
+    "openingCrawl": "开场字幕",
+    "characters": "角色",
+    "andMore": "... 还有{{count}}个",
+    "loading": "加载中...",
+    "notFound": "未找到电影"
+  },
+  "statistics": {
+    "title": "搜索统计",
+    "overview": "概览",
+    "totalSearches": "总搜索次数：",
+    "averageResponseTime": "平均响应时间：",
+    "peopleSearches": "人物搜索：",
+    "movieSearches": "电影搜索：",
+    "topQueries": "热门搜索词前5名",
+    "popularHours": "热门搜索时段",
+    "searchTerm": "搜索词",
+    "count": "次数",
+    "percentage": "百分比",
+    "hour": "小时（UTC）",
+    "searchCount": "搜索次数",
+    "loading": "加载统计数据...",
+    "failed": "加载统计数据失败"
+  },
+  "preferences": {
+    "title": "设置",
+    "language": "语言",
+    "theme": "主题",
+    "light": "浅色",
+    "dark": "深色",
+    "close": "关闭"
+  }
+}
+

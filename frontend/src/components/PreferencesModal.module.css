@@ -1,0 +1,137 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-bg-overlay, rgba(0, 0, 0, 0.5));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background-color: var(--color-bg-card, #ffffff);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px var(--color-shadow, rgba(0, 0, 0, 0.1));
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border, #f0f0f0);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--color-text-tertiary, #999);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.closeButton:hover {
+  color: var(--color-text-primary, #333);
+}
+
+.content {
+  padding: 24px;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+  margin-bottom: 12px;
+}
+
+.select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--color-border, #f0f0f0);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--color-text-primary, #333);
+  background-color: var(--color-bg-card, #ffffff);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-green, #2ecc71);
+}
+
+.themeButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.themeButton {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--color-border, #f0f0f0);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+  background-color: var(--color-bg-card, #ffffff);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.themeButton:hover {
+  border-color: var(--color-green, #2ecc71);
+}
+
+.themeButton.active {
+  border-color: var(--color-green, #2ecc71);
+  background-color: var(--color-green, #2ecc71);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+  }
+
+  .header {
+    padding: 16px 20px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+}
+

@@ -1,0 +1,29 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+.small {
+  max-width: 600px;
+}
+
+.medium {
+  max-width: 900px;
+}
+
+.large {
+  max-width: 1200px;
+}
+
+.full {
+  max-width: 100%;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-md);
+  }
+}
+

@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - swstarter-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - SWAPI_BASE_URL=https://swapi.dev/api
+    depends_on:
+      - redis
+    networks:
+      - swstarter-network
+
+  queue-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: php artisan queue:work redis --verbose --tries=3 --timeout=90 --sleep=3 --max-time=3600 --max-jobs=1000
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - swstarter-network
+
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - swstarter-network
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --appendfsync everysec --save 60 1000
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - swstarter-network
+
+volumes:
+  redis-data:
+
+networks:
+  swstarter-network:
+    driver: bridge
+

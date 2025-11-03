@@ -1,0 +1,54 @@
+/* RadioOption - Generated from Zeplin design */
+/* Layer: "People" (and "Movies") from screen "1 - Option Selected - Empty Input" */
+/* URL: https://zpl.io/aREGZ7g */
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  user-select: none;
+}
+
+.radioButtonWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0;
+  z-index: 1;
+}
+
+/* Focus state for accessibility - targets the CustomRadioCircle via adjacent sibling */
+.radioInput:focus + * {
+  outline: 2px solid #0094ff;
+  outline-offset: 2px;
+}
+
+.radioLabelText {
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .radioOption {
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .radioInput {
+    width: 18px;
+    height: 18px;
+  }
+}
+

@@ -1,0 +1,75 @@
+{
+  "header": {
+    "title": "SWStarter"
+  },
+  "nav": {
+    "home": "Home",
+    "preferences": "Preferences"
+  },
+  "search": {
+    "label": "What are you searching for ?",
+    "people": "People",
+    "movies": "Movies",
+    "placeholderPeople": "e.g. Luke Skywalker, Yoda, Chewbacca",
+    "placeholderMovies": "e.g. Empire, Jedi, Hope",
+    "buttonSearch": "SEARCH",
+    "buttonSearching": "SEARCHING...",
+    "resultsTitle": "Results"
+  },
+  "results": {
+    "seeDetails": "SEE DETAILS",
+    "backToSearch": "BACK TO SEARCH"
+  },
+  "empty": {
+    "noMatches": "There are zero matches.",
+    "useForm": "Use the form to search for People or Movies."
+  },
+  "loading": {
+    "searching": "Searching..."
+  },
+  "person": {
+    "details": "Details",
+    "movies": "Movies",
+    "birthYear": "Birth Year",
+    "gender": "Gender",
+    "eyeColor": "Eye Color",
+    "hairColor": "Hair Color",
+    "height": "Height",
+    "mass": "Mass",
+    "loading": "Loading...",
+    "notFound": "Person not found"
+  },
+  "movie": {
+    "openingCrawl": "Opening Crawl",
+    "characters": "Characters",
+    "andMore": "... and {{count}} more",
+    "loading": "Loading...",
+    "notFound": "Movie not found"
+  },
+  "statistics": {
+    "title": "Search Statistics",
+    "overview": "Overview",
+    "totalSearches": "Total Searches:",
+    "averageResponseTime": "Average Response Time:",
+    "peopleSearches": "People Searches:",
+    "movieSearches": "Movie Searches:",
+    "topQueries": "Top 5 Search Terms",
+    "popularHours": "Popular Search Hours",
+    "searchTerm": "Search Term",
+    "count": "Count",
+    "percentage": "Percentage",
+    "hour": "Hour (UTC)",
+    "searchCount": "Search Count",
+    "loading": "Loading statistics...",
+    "failed": "Failed to load statistics"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "close": "Close"
+  }
+}
+

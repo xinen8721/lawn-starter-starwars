@@ -1,0 +1,75 @@
+{
+  "header": {
+    "title": "SWStarter"
+  },
+  "nav": {
+    "home": "Accueil",
+    "preferences": "Préférences"
+  },
+  "search": {
+    "label": "Que recherchez-vous ?",
+    "people": "Personnages",
+    "movies": "Films",
+    "placeholderPeople": "ex. Luke Skywalker, Yoda, Chewbacca",
+    "placeholderMovies": "ex. Empire, Jedi, Espoir",
+    "buttonSearch": "RECHERCHER",
+    "buttonSearching": "RECHERCHE...",
+    "resultsTitle": "Résultats"
+  },
+  "results": {
+    "seeDetails": "VOIR DÉTAILS",
+    "backToSearch": "RETOUR À LA RECHERCHE"
+  },
+  "empty": {
+    "noMatches": "Il n'y a aucun résultat.",
+    "useForm": "Utilisez le formulaire pour rechercher des personnages ou des films."
+  },
+  "loading": {
+    "searching": "Recherche en cours..."
+  },
+  "person": {
+    "details": "Détails",
+    "movies": "Films",
+    "birthYear": "Année de naissance",
+    "gender": "Genre",
+    "eyeColor": "Couleur des yeux",
+    "hairColor": "Couleur des cheveux",
+    "height": "Taille",
+    "mass": "Masse",
+    "loading": "Chargement...",
+    "notFound": "Personnage non trouvé"
+  },
+  "movie": {
+    "openingCrawl": "Générique d'ouverture",
+    "characters": "Personnages",
+    "andMore": "... et {{count}} de plus",
+    "loading": "Chargement...",
+    "notFound": "Film non trouvé"
+  },
+  "statistics": {
+    "title": "Statistiques de recherche",
+    "overview": "Aperçu",
+    "totalSearches": "Recherches totales :",
+    "averageResponseTime": "Temps de réponse moyen :",
+    "peopleSearches": "Recherches de personnages :",
+    "movieSearches": "Recherches de films :",
+    "topQueries": "Top 5 des termes de recherche",
+    "popularHours": "Heures de recherche populaires",
+    "searchTerm": "Terme de recherche",
+    "count": "Nombre",
+    "percentage": "Pourcentage",
+    "hour": "Heure (UTC)",
+    "searchCount": "Nombre de recherches",
+    "loading": "Chargement des statistiques...",
+    "failed": "Échec du chargement des statistiques"
+  },
+  "preferences": {
+    "title": "Préférences",
+    "language": "Langue",
+    "theme": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "close": "Fermer"
+  }
+}
+

@@ -1,0 +1,43 @@
+/* CustomRadioCircle - Generated from Zeplin design */
+/* Layers: "Ellipse" (unselected) and "Ellipse" + "Ellipse 2" (selected) */
+/* URL: https://zpl.io/aREGZ7g */
+
+.radioCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #c4c4c4;
+  flex-shrink: 0;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+/* Selected state - blue circle */
+.radioCircleSelected {
+  background-color: #0094ff; /* emerald from Zeplin design tokens */
+  border-color: #0094ff;
+}
+
+/* Center white dot - only visible when selected */
+.radioCircleDot {
+  border-radius: 50%;
+  background-color: #ffffff;
+  flex-shrink: 0;
+}
+
+/* Hover effect */
+.radioCircle:hover {
+  border-color: #0094ff;
+}
+
+/* Dark mode support */
+:root[data-theme='dark'] .radioCircle {
+  background-color: var(--color-bg-card, #ffffff);
+}
+
+:root[data-theme='dark'] .radioCircleSelected {
+  background-color: #0094ff;
+}
+

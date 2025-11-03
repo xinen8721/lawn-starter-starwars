@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Montserrat Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Primary Meta Tags -->
+    <title>SWStarter - Star Wars Character and Movie Search</title>
+    <meta name="title" content="SWStarter - Star Wars Character and Movie Search" />
+    <meta name="description" content="Search and explore Star Wars characters and movies. Find detailed information about your favorite characters, films, and view search statistics." />
+    <meta name="keywords" content="star wars, characters, movies, search, swapi, films, jedi, sith" />
+    <meta name="author" content="SWStarter" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://swstarter.com/" />
+    <meta property="og:title" content="SWStarter - Star Wars Character and Movie Search" />
+    <meta property="og:description" content="Search and explore Star Wars characters and movies. Find detailed information about your favorite characters and films." />
+    <meta property="og:image" content="https://swstarter.com/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://swstarter.com/" />
+    <meta property="twitter:title" content="SWStarter - Star Wars Character and Movie Search" />
+    <meta property="twitter:description" content="Search and explore Star Wars characters and movies. Find detailed information about your favorite characters and films." />
+    <meta property="twitter:image" content="https://swstarter.com/og-image.jpg" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SWStarter",
+      "url": "https://swstarter.com",
+      "description": "Search and explore Star Wars characters and movies",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://swstarter.com/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

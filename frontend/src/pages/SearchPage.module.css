@@ -1,0 +1,142 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 410px 1fr;
+  gap: 30px;
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.searchPanel {
+  /* Container styling now handled by SearchContainer component */
+  height: fit-content;
+  position: sticky;
+  top: 30px;
+}
+
+.resultsPanel {
+  /* Container styling now handled by ResultsContainer component */
+  min-height: 500px;
+}
+
+.resultsHeader {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-dark);
+}
+
+.resultsTitle {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.resultsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.emptyMessage {
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-text-tertiary);
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.emptyHint {
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.mobileBackButton {
+  display: none;
+}
+
+.backButton {
+  padding: 10px 24px;
+  background-color: var(--color-green);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 20px;
+  height: 40px;
+}
+
+.backButton:hover {
+  background-color: var(--color-green-hover);
+}
+
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+    padding: 15px;
+    gap: 0;
+  }
+
+  .searchPanel {
+    padding: 20px;
+  }
+
+  .resultsPanel {
+    padding: 20px;
+    min-height: calc(100vh - 120px);
+  }
+
+  .resultsHeader {
+    margin-bottom: 20px;
+  }
+
+  .resultsTitle {
+    font-size: 20px;
+  }
+
+  /* Mobile: hide panels based on search state */
+  .searchPanel[data-mobile-hide="true"] {
+    display: none;
+  }
+
+  .resultsPanel[data-mobile-hide="true"] {
+    display: none;
+  }
+
+  /* Show back button on mobile */
+  .mobileBackButton {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .backButton {
+    width: 100%;
+  }
+}
+

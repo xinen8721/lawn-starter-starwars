@@ -1,0 +1,57 @@
+/* SearchButton - Generated from Zeplin design */
+/* Layers: "SearchButton-Disabled" and "SEARCH" from screen "1 - Option Selected - Empty Input" */
+/* URL: https://zpl.io/aREGZ7g */
+
+.searchButton {
+  height: 34px;
+  padding: 0 24px;
+  background-color: var(--color-green, #0ab463); /* green-teal from design tokens */
+  color: #ffffff;
+  border: 1px solid var(--color-green, #0ab463);
+  border-radius: 20px;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.searchButton:hover:not(:disabled) {
+  background-color: var(--color-green-hover, #09a357);
+}
+
+.searchButton:disabled,
+.searchButton.disabled {
+  background-color: #c4c4c4; /* pinkish-grey from design tokens */
+  border-color: #c4c4c4;
+  cursor: not-allowed;
+  color: #ffffff;
+}
+
+.searchButton:focus {
+  outline: 2px solid var(--color-green, #0ab463);
+  outline-offset: 2px;
+}
+
+.searchButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .searchButton {
+    height: 40px;
+    font-size: 14px;
+  }
+}
+

@@ -1,0 +1,27 @@
+/* SearchPromptLabel - Generated from Zeplin design */
+/* Layer: "What are you searching for?" from screen "1 - Option Selected - Empty Input" */
+/* URL: https://zpl.io/aREGZ7g */
+
+.searchPromptLabel {
+  display: block;
+  width: auto;
+  height: 18px;
+  margin: 0 0 20px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .searchPromptLabel {
+    font-size: 14px;
+  }
+}
+

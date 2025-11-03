@@ -1,0 +1,75 @@
+{
+  "header": {
+    "title": "SWStarter"
+  },
+  "nav": {
+    "home": "ホーム",
+    "preferences": "設定"
+  },
+  "search": {
+    "label": "何を検索しますか？",
+    "people": "人物",
+    "movies": "映画",
+    "placeholderPeople": "例：ルーク・スカイウォーカー、ヨーダ、チューバッカ",
+    "placeholderMovies": "例：帝国、ジェダイ、希望",
+    "buttonSearch": "検索",
+    "buttonSearching": "検索中...",
+    "resultsTitle": "結果"
+  },
+  "results": {
+    "seeDetails": "詳細を見る",
+    "backToSearch": "検索に戻る"
+  },
+  "empty": {
+    "noMatches": "一致するものはありません。",
+    "useForm": "フォームを使用して人物または映画を検索してください。"
+  },
+  "loading": {
+    "searching": "検索中..."
+  },
+  "person": {
+    "details": "詳細",
+    "movies": "映画",
+    "birthYear": "生年",
+    "gender": "性別",
+    "eyeColor": "目の色",
+    "hairColor": "髪の色",
+    "height": "身長",
+    "mass": "体重",
+    "loading": "読み込み中...",
+    "notFound": "人物が見つかりません"
+  },
+  "movie": {
+    "openingCrawl": "オープニングクロール",
+    "characters": "登場人物",
+    "andMore": "... さらに{{count}}人",
+    "loading": "読み込み中...",
+    "notFound": "映画が見つかりません"
+  },
+  "statistics": {
+    "title": "検索統計",
+    "overview": "概要",
+    "totalSearches": "総検索数：",
+    "averageResponseTime": "平均応答時間：",
+    "peopleSearches": "人物検索：",
+    "movieSearches": "映画検索：",
+    "topQueries": "上位5件の検索語",
+    "popularHours": "人気の検索時間",
+    "searchTerm": "検索語",
+    "count": "回数",
+    "percentage": "割合",
+    "hour": "時間（UTC）",
+    "searchCount": "検索回数",
+    "loading": "統計を読み込み中...",
+    "failed": "統計の読み込みに失敗しました"
+  },
+  "preferences": {
+    "title": "設定",
+    "language": "言語",
+    "theme": "テーマ",
+    "light": "ライト",
+    "dark": "ダーク",
+    "close": "閉じる"
+  }
+}
+

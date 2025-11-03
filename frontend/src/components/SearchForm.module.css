@@ -1,0 +1,35 @@
+/* SearchForm - Based on Zeplin design "1 - Option Selected - Empty Input" */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* searchPromptLabel styling now handled by SearchPromptLabel component */
+
+.radioGroup {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Radio styling now handled by RadioOption component */
+
+.inputWrapper {
+  position: relative;
+}
+
+/* Input and button styling now handled by SearchInput and SearchButton components */
+
+@media (max-width: 768px) {
+  .radioGroup {
+    gap: 30px;
+  }
+}
