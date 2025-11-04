@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import axios from 'axios'
 import Header from '../components/Header'
+import ErrorMessage from '../components/ErrorMessage'
 import { searchApi } from '../services/api'
 import type { StatisticsResponse } from '../types'
 import styles from './Statistics.module.css'
@@ -11,19 +13,46 @@ function Statistics() {
   const navigate = useNavigate()
   const [statsResponse, setStatsResponse] = useState<StatisticsResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<{ message: string; details?: string } | null>(null)
+
+  const fetchStatistics = async () => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const data = await searchApi.getStatistics()
+      setStatsResponse(data)
+    } catch (err) {
+      // Provide specific error messages
+      if (axios.isAxiosError(err)) {
+        if (err.code === 'ERR_NETWORK' || !err.response) {
+          setError({
+            message: 'Unable to connect to the server',
+            details: 'Please check your internet connection and try again.',
+          })
+        } else if (err.response?.status >= 500) {
+          setError({
+            message: 'Server error',
+            details: 'Our servers are experiencing issues. Please try again later.',
+          })
+        } else {
+          setError({
+            message: 'Unable to load statistics',
+            details: err.response?.data?.message || 'An unexpected error occurred.',
+          })
+        }
+      } else {
+        setError({
+          message: 'An unexpected error occurred',
+          details: 'Please try again.',
+        })
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchStatistics = async () => {
-      try {
-        const data = await searchApi.getStatistics()
-        setStatsResponse(data)
-      } catch (error) {
-        console.error('Failed to fetch statistics:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     fetchStatistics()
   }, [])
 
@@ -32,6 +61,26 @@ function Statistics() {
       <div className={styles.page}>
         <Header />
         <div className={styles.loading}>{t('statistics.loading')}</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <Header />
+        <div className={styles.content}>
+          <div className={styles.container}>
+            <ErrorMessage
+              message={error.message}
+              details={error.details}
+              onRetry={fetchStatistics}
+            />
+            <button className={styles.backButton} onClick={() => navigate('/')}>
+              {t('results.backToSearch')}
+            </button>
+          </div>
+        </div>
       </div>
     )
   }

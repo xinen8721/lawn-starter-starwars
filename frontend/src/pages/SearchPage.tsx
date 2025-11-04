@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
+import axios from 'axios'
 import Header from '../components/Header'
 import SearchContainer from '../components/SearchContainer'
 import ResultsContainer from '../components/ResultsContainer'
@@ -8,6 +9,7 @@ import SearchForm from '../components/SearchForm'
 import ResultCard from '../components/ResultCard'
 import LoadingState from '../components/LoadingState'
 import NoResults from '../components/NoResults'
+import ErrorMessage from '../components/ErrorMessage'
 import { searchApi } from '../services/api'
 import type { SearchResult } from '../types'
 import styles from './SearchPage.module.css'
@@ -18,20 +20,63 @@ function SearchPage() {
   const [results, setResults] = useState<SearchResult[] | null>(null)
   const [searchType, setSearchType] = useState<'people' | 'movies'>('people')
   const [hasSearched, setHasSearched] = useState(false)
+  const [error, setError] = useState<{ message: string; details?: string } | null>(null)
+  const [lastSearchTerm, setLastSearchTerm] = useState<string>('')
 
   const handleSearch = async (type: 'people' | 'movies', term: string) => {
     setIsLoading(true)
     setHasSearched(true)
     setSearchType(type)
+    setLastSearchTerm(term)
+    setError(null)
 
     try {
       const response = await searchApi.search(type, term)
       setResults(response.results)
-    } catch (error) {
-      console.error('Search failed:', error)
-      setResults([])
+    } catch (err) {
+      // Provide specific error messages based on error type
+      if (axios.isAxiosError(err)) {
+        if (err.code === 'ERR_NETWORK' || !err.response) {
+          setError({
+            message: 'Unable to connect to the server',
+            details: 'Please check your internet connection and try again.',
+          })
+        } else if (err.response?.status === 404) {
+          setError({
+            message: 'Resource not found',
+            details: 'The requested resource could not be found.',
+          })
+        } else if (err.response?.status === 429) {
+          setError({
+            message: 'Too many requests',
+            details: 'Please wait a moment before trying again.',
+          })
+        } else if (err.response?.status >= 500) {
+          setError({
+            message: 'Server error',
+            details: 'Our servers are experiencing issues. Please try again later.',
+          })
+        } else {
+          setError({
+            message: 'Search failed',
+            details: err.response?.data?.message || 'An unexpected error occurred.',
+          })
+        }
+      } else {
+        setError({
+          message: 'An unexpected error occurred',
+          details: 'Please try again.',
+        })
+      }
+      setResults(null)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleRetry = () => {
+    if (lastSearchTerm) {
+      handleSearch(searchType, lastSearchTerm)
     }
   }
 
@@ -85,6 +130,12 @@ function SearchPage() {
                 </div>
               ) : isLoading ? (
                 <LoadingState />
+              ) : error ? (
+                <ErrorMessage
+                  message={error.message}
+                  details={error.details}
+                  onRetry={handleRetry}
+                />
               ) : results && results.length === 0 ? (
                 <NoResults />
               ) : results && results.length > 0 ? (

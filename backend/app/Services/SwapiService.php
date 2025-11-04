@@ -5,11 +5,15 @@ namespace App\Services;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class SwapiService
 {
     private Client $client;
     private string $baseUrl;
+
+    /** Cache TTL: 24 hours (SWAPI data rarely changes) */
+    const CACHE_TTL = 86400;
 
     public function __construct()
     {
@@ -23,10 +27,20 @@ class SwapiService
     }
 
     /**
-     * Search for people or films
+     * Search for people or films (with 24-hour cache)
      */
     public function search(string $type, string $term): array
     {
+        // Generate cache key from search parameters
+        $cacheKey = "swapi:search:{$type}:" . md5(strtolower($term));
+
+        // Try to get from cache first
+        $cached = Cache::get($cacheKey);
+        if ($cached !== null) {
+            Log::debug('SWAPI search cache hit', ['type' => $type, 'term' => $term]);
+            return $cached;
+        }
+
         try {
             $endpoint = $type === 'people' ? 'people/' : 'films/';
             $response = $this->client->get($endpoint, [
@@ -34,7 +48,13 @@ class SwapiService
             ]);
 
             $data = json_decode($response->getBody()->getContents(), true);
-            return $data['results'] ?? [];
+            $results = $data['results'] ?? [];
+
+            // Cache the results for 24 hours
+            Cache::put($cacheKey, $results, self::CACHE_TTL);
+            Log::debug('SWAPI search cached', ['type' => $type, 'term' => $term]);
+
+            return $results;
         } catch (GuzzleException $e) {
             Log::error('SWAPI search error', [
                 'type' => $type,
@@ -46,13 +66,28 @@ class SwapiService
     }
 
     /**
-     * Get person by ID
+     * Get person by ID (with 24-hour cache)
      */
     public function getPerson(int $id): ?array
     {
+        $cacheKey = "swapi:people:{$id}";
+
+        // Try to get from cache first
+        $cached = Cache::get($cacheKey);
+        if ($cached !== null) {
+            Log::debug('SWAPI person cache hit', ['id' => $id]);
+            return $cached;
+        }
+
         try {
             $response = $this->client->get("people/{$id}/");
-            return json_decode($response->getBody()->getContents(), true);
+            $person = json_decode($response->getBody()->getContents(), true);
+
+            // Cache the result for 24 hours
+            Cache::put($cacheKey, $person, self::CACHE_TTL);
+            Log::debug('SWAPI person cached', ['id' => $id]);
+
+            return $person;
         } catch (GuzzleException $e) {
             Log::error('SWAPI get person error', [
                 'id' => $id,
@@ -63,13 +98,28 @@ class SwapiService
     }
 
     /**
-     * Get film by ID
+     * Get film by ID (with 24-hour cache)
      */
     public function getFilm(int $id): ?array
     {
+        $cacheKey = "swapi:films:{$id}";
+
+        // Try to get from cache first
+        $cached = Cache::get($cacheKey);
+        if ($cached !== null) {
+            Log::debug('SWAPI film cache hit', ['id' => $id]);
+            return $cached;
+        }
+
         try {
             $response = $this->client->get("films/{$id}/");
-            return json_decode($response->getBody()->getContents(), true);
+            $film = json_decode($response->getBody()->getContents(), true);
+
+            // Cache the result for 24 hours
+            Cache::put($cacheKey, $film, self::CACHE_TTL);
+            Log::debug('SWAPI film cached', ['id' => $id]);
+
+            return $film;
         } catch (GuzzleException $e) {
             Log::error('SWAPI get film error', [
                 'id' => $id,

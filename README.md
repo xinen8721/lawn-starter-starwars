@@ -73,8 +73,22 @@ All configuration is managed through the `.env` file in the project root. The de
 - **Ports**: Change `FRONTEND_PORT`, `BACKEND_PORT`, or `REDIS_PORT` if you have conflicts
 - **API URL**: Modify `VITE_API_URL` for the frontend
 - **External API**: Change `SWAPI_BASE_URL` if needed
+- **CORS**: Set `FRONTEND_URL` to restrict API access to specific domains (default: `http://localhost:5173`)
 
 The `.env` file is committed to the repository for easy setup (contains no secrets).
+
+### Production Features
+
+The application includes several production-ready features:
+
+- **Rate Limiting**: API endpoints are rate-limited to prevent abuse
+  - Search endpoints: 60 requests per minute
+  - Statistics endpoint: 30 requests per minute
+- **Input Validation**: All inputs are validated and sanitized to prevent XSS and injection attacks
+- **Error Handling**: User-friendly error messages with retry functionality
+- **SWAPI Caching**: External API responses are cached for 24 hours to reduce latency and API calls
+- **Error Boundaries**: React error boundaries catch and display errors gracefully
+- **CORS Security**: API access is restricted to specific frontend domains
 
 ## Architecture
 

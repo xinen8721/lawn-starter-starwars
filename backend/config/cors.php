@@ -2,10 +2,13 @@
 
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
-    'allowed_methods' => ['*'],
-    'allowed_origins' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    // Restrict to specific frontend URL(s) - use env variable for flexibility
+    'allowed_origins' => [
+        env('FRONTEND_URL', 'http://localhost:5173'),
+    ],
     'allowed_origins_patterns' => [],
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['Content-Type', 'X-Requested-With', 'Authorization', 'Accept'],
     'exposed_headers' => [],
     'max_age' => 0,
     'supports_credentials' => false,

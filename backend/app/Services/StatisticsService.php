@@ -6,10 +6,28 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * StatisticsService - Calculates and caches search statistics from Redis
+ *
+ * Redis Key Structure:
+ * - search:{type}:top              - Sorted set of search terms by count (ZSET)
+ * - search:{type}:{term}:meta      - Hash with metadata (total_response_time, count, etc.)
+ * - search:type:{type}:count       - Total searches counter for this type (STRING)
+ * - search:hours:{HH}              - Counter for searches during this hour (STRING)
+ *
+ * Caching Strategy:
+ * - Statistics are pre-calculated by a scheduled job every 5 minutes
+ * - Results are cached in Redis with 1-hour TTL
+ * - API endpoint serves from cache for fast response times (<10ms)
+ * - Cache miss triggers immediate calculation (fallback, ~50-100ms)
+ */
 class StatisticsService
 {
+    /** Cache key for storing calculated statistics */
     const CACHE_KEY = 'statistics:latest';
-    const CACHE_TTL = 3600; // 1 hour TTL (stats update every 5 minutes)
+
+    /** Cache TTL: 1 hour (stats recalculated every 5 minutes, so this is safe) */
+    const CACHE_TTL = 3600;
 
     /**
      * Calculate and store statistics from Redis data (called by scheduled job)
@@ -49,6 +67,15 @@ class StatisticsService
 
     /**
      * Get top 5 queries with percentages from Redis sorted sets
+     *
+     * Algorithm:
+     * 1. Fetch top 5 searches from each type (people, movies) using ZREVRANGE
+     * 2. Merge all results into a single array (max 10 items)
+     * 3. Sort by count descending
+     * 4. Take top 5 overall
+     * 5. Calculate percentage of each query relative to total searches
+     *
+     * @return array Array of top queries with term, count, and percentage
      */
     private function getTopQueries(): array
     {
@@ -61,9 +88,11 @@ class StatisticsService
 
         $topQueries = [];
 
-        // Get top 5 from each type and merge
+        // Get top 5 from each type (people/movies) using Redis sorted sets
+        // These are stored with scores representing the count of each search term
         foreach (['people', 'movies'] as $type) {
             $topKey = "search:{$type}:top";
+            // ZREVRANGE gets members in descending order by score
             $typeResults = $redis->zrevrange($topKey, 0, 4, ['WITHSCORES' => true]);
 
             foreach ($typeResults as $term => $count) {
@@ -75,11 +104,11 @@ class StatisticsService
             }
         }
 
-        // Sort by count and take top 5
+        // Sort combined results by count (descending) and take top 5
         usort($topQueries, fn($a, $b) => $b['count'] - $a['count']);
         $topQueries = array_slice($topQueries, 0, 5);
 
-        // Add percentages
+        // Calculate percentage of total for each query
         return array_map(function ($query) use ($total) {
             return [
                 'term' => $query['term'],

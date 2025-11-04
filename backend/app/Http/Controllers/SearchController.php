@@ -22,7 +22,13 @@ class SearchController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:people,movies',
-            'term' => 'required|string|min:1|max:100',
+            'term' => 'required|string|min:2|max:100',
+        ], [
+            'type.required' => 'Search type is required',
+            'type.in' => 'Search type must be either "people" or "movies"',
+            'term.required' => 'Search term is required',
+            'term.min' => 'Search term must be at least 2 characters',
+            'term.max' => 'Search term must not exceed 100 characters',
         ]);
 
         if ($validator->fails()) {
@@ -33,7 +39,8 @@ class SearchController extends Controller
         }
 
         $type = $request->input('type');
-        $term = $request->input('term');
+        // Sanitize input to prevent XSS
+        $term = strip_tags($request->input('term'));
 
         $startTime = microtime(true);
 
@@ -79,6 +86,14 @@ class SearchController extends Controller
      */
     public function getPerson(int $id): JsonResponse
     {
+        // Validate ID is positive
+        if ($id < 1 || $id > 999999) {
+            return response()->json([
+                'error' => 'Invalid person ID',
+                'message' => 'Person ID must be a positive integer'
+            ], 422);
+        }
+
         try {
             $person = $this->swapiService->getPerson($id);
 
@@ -122,6 +137,14 @@ class SearchController extends Controller
      */
     public function getMovie(int $id): JsonResponse
     {
+        // Validate ID is positive
+        if ($id < 1 || $id > 999999) {
+            return response()->json([
+                'error' => 'Invalid movie ID',
+                'message' => 'Movie ID must be a positive integer'
+            ], 422);
+        }
+
         try {
             $movie = $this->swapiService->getFilm($id);
 

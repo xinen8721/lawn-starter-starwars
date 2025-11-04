@@ -1,0 +1,118 @@
+.errorMessage {
+  padding: 16px 20px;
+  border-radius: 6px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.text {
+  flex: 1;
+}
+
+.message {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.details {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+.retryButton {
+  padding: 8px 16px;
+  background-color: white;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.retryButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Error type */
+.error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+}
+
+.error .retryButton {
+  color: #c33;
+}
+
+.error .retryButton:hover {
+  background-color: #c33;
+  color: white;
+}
+
+/* Warning type */
+.warning {
+  background-color: #fffbf0;
+  border: 1px solid #ffd666;
+  color: #996600;
+}
+
+.warning .retryButton {
+  color: #996600;
+}
+
+.warning .retryButton:hover {
+  background-color: #996600;
+  color: white;
+}
+
+/* Info type */
+.info {
+  background-color: #e6f7ff;
+  border: 1px solid #91d5ff;
+  color: #0050b3;
+}
+
+.info .retryButton {
+  color: #0050b3;
+}
+
+.info .retryButton:hover {
+  background-color: #0050b3;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .errorMessage {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .retryButton {
+    width: 100%;
+  }
+}
+
