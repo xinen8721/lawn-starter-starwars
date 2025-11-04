@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
+use App\Services\SearchLogService;
 
 beforeEach(function () {
-    Redis::flushdb();
-});
-
-afterEach(function () {
-    Redis::flushdb();
+    // Mock SearchLogService to avoid Redis dependency
+    $mockSearchLogService = Mockery::mock(SearchLogService::class);
+    $mockSearchLogService->shouldReceive('logSearch')->andReturnNull();
+    $this->app->instance(SearchLogService::class, $mockSearchLogService);
 });
 
 test('search handles empty term validation', function () {
@@ -181,6 +181,18 @@ test('search returns empty results for non-existent term', function () {
 });
 
 test('search logs metrics for successful search', function () {
+    // Mock SearchLogService to verify it's called with correct parameters
+    $mockSearchLogService = Mockery::mock(SearchLogService::class);
+    $mockSearchLogService->shouldReceive('logSearch')
+        ->once()
+        ->withArgs(function ($type, $term, $count, $responseTime) {
+            return $type === 'people'
+                && $term === 'Luke'
+                && $count === 1
+                && is_numeric($responseTime);
+        });
+    $this->app->instance(SearchLogService::class, $mockSearchLogService);
+
     Http::fake([
         'https://swapi.dev/api/people/*' => Http::response([
             'results' => [
@@ -195,13 +207,5 @@ test('search logs metrics for successful search', function () {
     ]);
 
     $response->assertStatus(200);
-
-    // Verify search was logged in Redis
-    $typeCount = Redis::get('search:type:people:count');
-    expect($typeCount)->toBe('1');
-
-    // Verify search term was tracked
-    $topSearches = Redis::zrevrange('search:people:top', 0, -1, ['WITHSCORES' => true]);
-    expect($topSearches)->toHaveKey('Luke');
 });
 
