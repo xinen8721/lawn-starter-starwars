@@ -247,14 +247,18 @@ All endpoints follow consistent error response format:
 
 ## Rate Limiting
 
-Currently, no rate limiting is implemented. For production use, consider implementing rate limiting to prevent abuse.
+API endpoints are rate-limited to prevent abuse:
+- **Search endpoints** (`/search`, `/people/{id}`, `/movies/{id}`): 60 requests per minute
+- **Statistics endpoint** (`/statistics`): 30 requests per minute
+
+Rate limit exceeded responses return HTTP 429 (Too Many Requests).
 
 ## CORS
 
-The API supports Cross-Origin Resource Sharing (CORS) for all origins:
-- `Access-Control-Allow-Origin: *`
-- `Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS`
-- `Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With`
+The API supports Cross-Origin Resource Sharing (CORS) with restricted access:
+- `Access-Control-Allow-Origin`: Configured via `FRONTEND_URL` environment variable (default: `http://localhost:5173`)
+- `Access-Control-Allow-Methods`: `GET, POST, PUT, PATCH, DELETE, OPTIONS`
+- `Access-Control-Allow-Headers`: `Content-Type, X-Requested-With, Authorization, Accept`
 
 ## Data Sources
 
@@ -266,45 +270,56 @@ All character and movie data is sourced from the [Star Wars API (SWAPI)](https:/
 
 Statistics are calculated every 5 minutes by a background job that:
 
-1. Queries the `searches` table
+1. Reads search data from Redis
 2. Aggregates data:
    - Top 5 most searched terms with percentages
    - Average response time across all searches
    - Search volume distribution by hour
    - Total search count
-   - Breakdown by search type
-3. Stores results in `statistics` table
+   - Breakdown by search type (people vs movies)
+3. Caches results in Redis with 1-hour TTL
 4. Returns latest cached statistics on API calls
 
-## Database Schema
+## Data Storage (Redis)
 
-### searches table
-```sql
-id              SERIAL PRIMARY KEY
-search_type     VARCHAR(255)    -- 'people' or 'movies'
-search_term     VARCHAR(255)    -- The search query
-results_count   INTEGER         -- Number of results returned
-response_time_ms INTEGER        -- API response time
-created_at      TIMESTAMP
-updated_at      TIMESTAMP
+The application uses **Redis** for all data storage:
+
+### Redis Key Structure
+
+**Search Logs**:
+- `search:{type}:top` - Sorted set (ZSET) storing search terms by popularity
+- `search:{type}:{term}:meta` - Hash storing search metadata (response times, counts)
+- `search:type:{type}:count` - Counter for total searches by type
+- `search:hours:{HH}` - Counter for searches during specific hour (00-23)
+
+**SWAPI Cache** (24-hour TTL):
+- `swapi:people:{id}` - Cached person data from SWAPI
+- `swapi:films:{id}` - Cached movie data from SWAPI
+- `swapi:search:{type}:{hash}` - Cached search results from SWAPI
+
+**Statistics Cache** (1-hour TTL):
+- `statistics:latest` - Cached calculated statistics
+
+### Example Redis Keys
+
 ```
-
-### statistics table
-```sql
-id              SERIAL PRIMARY KEY
-data            JSON            -- All calculated statistics
-calculated_at   TIMESTAMP       -- When stats were calculated
-created_at      TIMESTAMP
-updated_at      TIMESTAMP
+search:people:top          → ZSET: {"luke": 25, "vader": 15, "leia": 12}
+search:people:luke:meta    → HASH: {count: 25, total_response_time: 6250}
+search:type:people:count   → STRING: 50
+search:hours:14            → STRING: 45
+swapi:people:1             → STRING: {"name": "Luke Skywalker", ...}
+statistics:latest          → STRING: {"top_queries": [...], ...}
 ```
 
 ## Response Times
 
 Typical response times:
-- Search: 200-500ms (depends on SWAPI response)
-- Person details: 200-400ms
-- Movie details: 200-400ms
-- Statistics: <50ms (cached)
+- **Search**: 50-100ms (cached) / 200-500ms (first request, depends on SWAPI)
+- **Person details**: 20-50ms (cached) / 200-400ms (first request)
+- **Movie details**: 20-50ms (cached) / 200-400ms (first request)
+- **Statistics**: <10ms (cached, updated every 5 minutes)
+
+All SWAPI data is cached for 24 hours, significantly improving performance for repeated requests.
 
 ## Testing with cURL
 
@@ -366,19 +381,43 @@ docker-compose logs -f backend
 
 ### Monitoring
 
-Monitor queue job processing:
+Monitor different services:
 ```bash
+# Queue worker logs
 docker-compose logs -f queue-worker
+
+# Scheduler logs (statistics calculation every 5 minutes)
 docker-compose logs -f scheduler
+
+# Backend API logs
+docker-compose logs -f backend
+
+# Redis data inspection
+docker-compose exec redis redis-cli
+> KEYS search:*
+> GET statistics:latest
+> ZREVRANGE search:people:top 0 4 WITHSCORES
 ```
 
 ## Version History
+
+- **v1.1.0** (2025): Production improvements
+  - Added rate limiting (60/min for search, 30/min for stats)
+  - Enhanced input validation and sanitization
+  - Implemented React error boundaries
+  - Added SWAPI response caching (24-hour TTL)
+  - Improved error messages across all endpoints
+  - Restricted CORS to specific frontend URL
+  - Migrated to Redis-only architecture (removed PostgreSQL)
+  - Added comprehensive inline documentation
 
 - **v1.0.0** (2024): Initial release
   - Search endpoint
   - Person/Movie detail endpoints
   - Statistics endpoint
   - Queue-based statistics calculation
+  - Multi-language support (EN, FR, JA, ZH)
+  - Dark mode theming
 
 ---
 
