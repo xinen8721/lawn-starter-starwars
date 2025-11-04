@@ -194,7 +194,7 @@ test('top queries limited to 5', function () {
         if (!empty($options) && isset($options['WITHSCORES'])) {
             if ($key === 'search:people:top') {
                 return [
-                    'Person1' => 10, 'Person2' => 9, 'Person3' => 8, 
+                    'Person1' => 10, 'Person2' => 9, 'Person3' => 8,
                     'Person4' => 7, 'Person5' => 6
                 ];
             }
