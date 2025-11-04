@@ -18,12 +18,13 @@ export function isEscapeKey(key: string): boolean {
  * Check if the event is an Arrow key press
  */
 export function isArrowKey(key: string): boolean {
-  return [
+  const arrowKeys = [
     KEYBOARD_KEYS.ARROW_UP,
     KEYBOARD_KEYS.ARROW_DOWN,
     KEYBOARD_KEYS.ARROW_LEFT,
     KEYBOARD_KEYS.ARROW_RIGHT,
-  ].includes(key)
+  ]
+  return arrowKeys.includes(key as typeof arrowKeys[number])
 }
 
 /**

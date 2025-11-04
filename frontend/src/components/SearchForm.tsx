@@ -23,18 +23,19 @@ function SearchForm({ onSearch, isLoading }: SearchFormProps) {
     }
   }
 
-  const handleRadioKeyDown = (e: React.KeyboardEvent, value: 'people' | 'movies') => {
+  const handleRadioKeyDown = (e: React.KeyboardEvent, value: string) => {
+    const typedValue = value as 'people' | 'movies'
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      setSearchType(value)
+      setSearchType(typedValue)
     }
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault()
-      setSearchType(value === 'people' ? 'movies' : 'people')
+      setSearchType(typedValue === 'people' ? 'movies' : 'people')
     }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault()
-      setSearchType(value === 'people' ? 'movies' : 'people')
+      setSearchType(typedValue === 'people' ? 'movies' : 'people')
     }
   }
 

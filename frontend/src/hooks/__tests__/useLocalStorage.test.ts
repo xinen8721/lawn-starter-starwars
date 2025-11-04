@@ -53,13 +53,13 @@ describe('useLocalStorage', () => {
     const { result } = renderHook(() => useLocalStorage('test-key', 0))
 
     act(() => {
-      result.current[1](prev => prev + 1)
+      result.current[1]((prev: number) => prev + 1)
     })
 
     expect(result.current[0]).toBe(1)
 
     act(() => {
-      result.current[1](prev => prev + 1)
+      result.current[1]((prev: number) => prev + 1)
     })
 
     expect(result.current[0]).toBe(2)

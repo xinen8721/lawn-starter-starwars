@@ -1,5 +1,4 @@
 import axios from 'axios'
-import type { AxiosInstance } from 'axios'
 
 jest.mock('axios')
 const mockedAxios = axios as jest.Mocked<typeof axios>
@@ -10,11 +9,12 @@ describe('searchApi', () => {
     get: jest.fn(),
     put: jest.fn(),
     delete: jest.fn(),
-  } as unknown as AxiosInstance
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockedAxios.create = jest.fn(() => mockAxiosInstance)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockedAxios.create = jest.fn(() => mockAxiosInstance as any)
   })
 
   describe('search', () => {
@@ -85,14 +85,25 @@ describe('searchApi', () => {
   describe('getStatistics', () => {
     test('calls correct endpoint', async () => {
       mockAxiosInstance.get.mockResolvedValue({
-        data: { total_searches: 100 }
+        data: {
+          data: {
+            total_searches: 100,
+            average_response_time: 150,
+            top_queries: [],
+            popular_hours: [],
+            searches_by_type: {}
+          },
+          calculated_at: '2024-01-01T00:00:00Z',
+          calculation_time_ms: 5,
+          cached_at: '2024-01-01T00:00:00Z'
+        }
       })
 
       await jest.isolateModulesAsync(async () => {
         const { searchApi: freshApi } = await import('../api')
         const result = await freshApi.getStatistics()
         expect(mockAxiosInstance.get).toHaveBeenCalledWith('/statistics')
-        expect(result.total_searches).toBe(100)
+        expect(result.data.total_searches).toBe(100)
       })
     })
   })
