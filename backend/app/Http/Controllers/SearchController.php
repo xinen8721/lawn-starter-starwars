@@ -22,12 +22,12 @@ class SearchController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:people,movies',
-            'term' => 'required|string|min:2|max:100',
+            'term' => 'required|string|min:1|max:100',
         ], [
             'type.required' => 'Search type is required',
             'type.in' => 'Search type must be either "people" or "movies"',
             'term.required' => 'Search term is required',
-            'term.min' => 'Search term must be at least 2 characters',
+            'term.min' => 'Search term must be at least 1 character',
             'term.max' => 'Search term must not exceed 100 characters',
         ]);
 
