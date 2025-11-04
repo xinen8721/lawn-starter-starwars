@@ -77,6 +77,7 @@ function PersonDetails() {
 
   useEffect(() => {
     fetchPerson()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   if (isLoading) {

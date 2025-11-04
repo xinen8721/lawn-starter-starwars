@@ -13,10 +13,10 @@ test('CalculateStatistics job runs successfully', function () {
             'average_response_time' => 215.0,
             'top_queries' => [],
             'popular_hours' => [],
-            'searches_by_type' => ['people' => 2, 'movies' => 0]
+            'searches_by_type' => ['people' => 2, 'movies' => 0],
         ]);
 
-    $job = new CalculateStatistics();
+    $job = new CalculateStatistics;
     $job->handle($mockStatisticsService);
 });
 
@@ -30,10 +30,10 @@ test('CalculateStatistics job handles empty data', function () {
             'average_response_time' => 0.0,
             'top_queries' => [],
             'popular_hours' => [],
-            'searches_by_type' => ['people' => 0, 'movies' => 0]
+            'searches_by_type' => ['people' => 0, 'movies' => 0],
         ]);
 
-    $job = new CalculateStatistics();
+    $job = new CalculateStatistics;
     $job->handle($mockStatisticsService);
 });
 
@@ -47,13 +47,12 @@ test('CalculateStatistics job caches results', function () {
             'average_response_time' => 0.0,
             'top_queries' => [],
             'popular_hours' => [],
-            'searches_by_type' => ['people' => 0, 'movies' => 0]
+            'searches_by_type' => ['people' => 0, 'movies' => 0],
         ]);
 
-    $job = new CalculateStatistics();
+    $job = new CalculateStatistics;
     $job->handle($mockStatisticsService);
 
     // Job successfully handles the service, which internally caches
     expect(true)->toBeTrue();
 });
-

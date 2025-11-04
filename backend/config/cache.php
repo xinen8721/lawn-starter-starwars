@@ -18,4 +18,3 @@ return [
 
     'prefix' => env('CACHE_PREFIX', 'swstarter_cache'),
 ];
-

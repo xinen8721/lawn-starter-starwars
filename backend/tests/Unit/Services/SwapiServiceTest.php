@@ -4,7 +4,7 @@ use App\Services\SwapiService;
 use Illuminate\Support\Facades\Http;
 
 beforeEach(function () {
-    $this->service = new SwapiService();
+    $this->service = new SwapiService;
 });
 
 test('search people returns results from SWAPI', function () {
@@ -13,8 +13,8 @@ test('search people returns results from SWAPI', function () {
             'results' => [
                 ['name' => 'Luke Skywalker', 'url' => 'https://swapi.dev/api/people/1/'],
                 ['name' => 'Leia Organa', 'url' => 'https://swapi.dev/api/people/5/'],
-            ]
-        ], 200)
+            ],
+        ], 200),
     ]);
 
     $results = $this->service->search('people', 'Luke');
@@ -30,8 +30,8 @@ test('search movies returns results from SWAPI', function () {
         'https://swapi.dev/api/films/*' => Http::response([
             'results' => [
                 ['title' => 'A New Hope', 'url' => 'https://swapi.dev/api/films/1/'],
-            ]
-        ], 200)
+            ],
+        ], 200),
     ]);
 
     $results = $this->service->search('movies', 'Hope');
@@ -47,8 +47,8 @@ test('search returns URL with ID', function () {
         'https://swapi.dev/api/people/*' => Http::response([
             'results' => [
                 ['name' => 'Luke Skywalker', 'url' => 'https://swapi.dev/api/people/1/'],
-            ]
-        ], 200)
+            ],
+        ], 200),
     ]);
 
     $results = $this->service->search('people', 'Luke');
@@ -72,8 +72,8 @@ test('getPerson returns person details', function () {
             'species' => [],
             'vehicles' => [],
             'starships' => [],
-            'url' => 'https://swapi.dev/api/people/1/'
-        ], 200)
+            'url' => 'https://swapi.dev/api/people/1/',
+        ], 200),
     ]);
 
     $person = $this->service->getPerson(1);
@@ -97,8 +97,8 @@ test('getFilm returns film details', function () {
             'starships' => [],
             'vehicles' => [],
             'species' => [],
-            'url' => 'https://swapi.dev/api/films/1/'
-        ], 200)
+            'url' => 'https://swapi.dev/api/films/1/',
+        ], 200),
     ]);
 
     $film = $this->service->getFilm(1);
@@ -111,8 +111,8 @@ test('getFilm returns film details', function () {
 test('search handles empty results', function () {
     Http::fake([
         'https://swapi.dev/api/people/*' => Http::response([
-            'results' => []
-        ], 200)
+            'results' => [],
+        ], 200),
     ]);
 
     $results = $this->service->search('people', 'NonExistent');
@@ -120,4 +120,3 @@ test('search handles empty results', function () {
     expect($results)->toBeArray()
         ->and(count($results))->toBe(0);
 });
-

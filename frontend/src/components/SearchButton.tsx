@@ -25,7 +25,6 @@ interface SearchButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  */
 function SearchButton({
   children,
-  variant = 'default',
   fullWidth = true,
   disabled,
   ...props

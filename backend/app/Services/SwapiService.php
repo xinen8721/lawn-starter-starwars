@@ -4,12 +4,13 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class SwapiService
 {
     private Client $client;
+
     private string $baseUrl;
 
     /** Cache TTL: 24 hours (SWAPI data rarely changes) */
@@ -19,7 +20,7 @@ class SwapiService
     {
         $this->baseUrl = env('SWAPI_BASE_URL', 'https://swapi.dev/api');
         // Ensure base_uri ends with a slash for Guzzle
-        $baseUri = rtrim($this->baseUrl, '/') . '/';
+        $baseUri = rtrim($this->baseUrl, '/').'/';
         $this->client = new Client([
             'base_uri' => $baseUri,
             'timeout' => 10,
@@ -32,19 +33,20 @@ class SwapiService
     public function search(string $type, string $term): array
     {
         // Generate cache key from search parameters
-        $cacheKey = "swapi:search:{$type}:" . md5(strtolower($term));
+        $cacheKey = "swapi:search:{$type}:".md5(strtolower($term));
 
         // Try to get from cache first
         $cached = Cache::get($cacheKey);
         if ($cached !== null) {
             Log::debug('SWAPI search cache hit', ['type' => $type, 'term' => $term]);
+
             return $cached;
         }
 
         try {
             $endpoint = $type === 'people' ? 'people/' : 'films/';
             $response = $this->client->get($endpoint, [
-                'query' => ['search' => $term]
+                'query' => ['search' => $term],
             ]);
 
             $data = json_decode($response->getBody()->getContents(), true);
@@ -59,7 +61,7 @@ class SwapiService
             Log::error('SWAPI search error', [
                 'type' => $type,
                 'term' => $term,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e;
         }
@@ -76,6 +78,7 @@ class SwapiService
         $cached = Cache::get($cacheKey);
         if ($cached !== null) {
             Log::debug('SWAPI person cache hit', ['id' => $id]);
+
             return $cached;
         }
 
@@ -91,8 +94,9 @@ class SwapiService
         } catch (GuzzleException $e) {
             Log::error('SWAPI get person error', [
                 'id' => $id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -108,6 +112,7 @@ class SwapiService
         $cached = Cache::get($cacheKey);
         if ($cached !== null) {
             Log::debug('SWAPI film cache hit', ['id' => $id]);
+
             return $cached;
         }
 
@@ -123,8 +128,9 @@ class SwapiService
         } catch (GuzzleException $e) {
             Log::error('SWAPI get film error', [
                 'id' => $id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -136,7 +142,7 @@ class SwapiService
     {
         // URL format: https://swapi.dev/api/people/1/
         preg_match('/\/(\d+)\/$/', $url, $matches);
+
         return isset($matches[1]) ? (int) $matches[1] : null;
     }
 }
-

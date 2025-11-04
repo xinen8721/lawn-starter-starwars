@@ -87,4 +87,3 @@ class Kernel extends HttpKernel
             ->group(base_path('routes/api.php'));
     }
 }
-

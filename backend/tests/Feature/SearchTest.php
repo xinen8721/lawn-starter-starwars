@@ -7,9 +7,9 @@ test('search endpoint returns successful response for people', function () {
     Http::fake([
         'https://swapi.dev/api/people/*' => Http::response([
             'results' => [
-                ['name' => 'Luke Skywalker', 'url' => 'https://swapi.dev/api/people/1/']
-            ]
-        ], 200)
+                ['name' => 'Luke Skywalker', 'url' => 'https://swapi.dev/api/people/1/'],
+            ],
+        ], 200),
     ]);
 
     $response = $this->postJson('/api/search', [
@@ -23,8 +23,8 @@ test('search endpoint returns successful response for people', function () {
             'term',
             'count',
             'results' => [
-                '*' => ['id', 'name', 'url']
-            ]
+                '*' => ['id', 'name', 'url'],
+            ],
         ]);
 });
 
@@ -33,9 +33,9 @@ test('search endpoint returns successful response for movies', function () {
     Http::fake([
         'https://swapi.dev/api/films/*' => Http::response([
             'results' => [
-                ['title' => 'The Empire Strikes Back', 'url' => 'https://swapi.dev/api/films/2/']
-            ]
-        ], 200)
+                ['title' => 'The Empire Strikes Back', 'url' => 'https://swapi.dev/api/films/2/'],
+            ],
+        ], 200),
     ]);
 
     $response = $this->postJson('/api/search', [
@@ -49,8 +49,8 @@ test('search endpoint returns successful response for movies', function () {
             'term',
             'count',
             'results' => [
-                '*' => ['id', 'name', 'url']
-            ]
+                '*' => ['id', 'name', 'url'],
+            ],
         ]);
 });
 
@@ -62,8 +62,8 @@ test('search endpoint validates required fields', function () {
             'error',
             'messages' => [
                 'type',
-                'term'
-            ]
+                'term',
+            ],
         ]);
 });
 
@@ -114,7 +114,7 @@ test('statistics endpoint returns data', function () {
         'average_response_time',
         'top_queries',
         'popular_hours',
-        'searches_by_type'
+        'searches_by_type',
     ]);
 
     // Verify data values
@@ -123,4 +123,3 @@ test('statistics endpoint returns data', function () {
     expect($data['data']['top_queries'])->toHaveCount(2);
     expect($data['data']['searches_by_type'])->toHaveKeys(['people', 'movies']);
 });
-

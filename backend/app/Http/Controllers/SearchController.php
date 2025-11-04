@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SwapiService;
 use App\Services\SearchLogService;
+use App\Services\SwapiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +34,7 @@ class SearchController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'error' => 'Validation failed',
-                'messages' => $validator->errors()
+                'messages' => $validator->errors(),
             ], 422);
         }
 
@@ -76,7 +76,7 @@ class SearchController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to fetch results',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -90,16 +90,16 @@ class SearchController extends Controller
         if ($id < 1 || $id > 999999) {
             return response()->json([
                 'error' => 'Invalid person ID',
-                'message' => 'Person ID must be a positive integer'
+                'message' => 'Person ID must be a positive integer',
             ], 422);
         }
 
         try {
             $person = $this->swapiService->getPerson($id);
 
-            if (!$person) {
+            if (! $person) {
                 return response()->json([
-                    'error' => 'Person not found'
+                    'error' => 'Person not found',
                 ], 404);
             }
 
@@ -127,7 +127,7 @@ class SearchController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to fetch person',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -141,16 +141,16 @@ class SearchController extends Controller
         if ($id < 1 || $id > 999999) {
             return response()->json([
                 'error' => 'Invalid movie ID',
-                'message' => 'Movie ID must be a positive integer'
+                'message' => 'Movie ID must be a positive integer',
             ], 422);
         }
 
         try {
             $movie = $this->swapiService->getFilm($id);
 
-            if (!$movie) {
+            if (! $movie) {
                 return response()->json([
-                    'error' => 'Movie not found'
+                    'error' => 'Movie not found',
                 ], 404);
             }
 
@@ -176,9 +176,8 @@ class SearchController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to fetch movie',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
 }
-

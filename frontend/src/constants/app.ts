@@ -17,7 +17,7 @@ let apiUrl = 'http://localhost:8000'
 // In production/Vite environment, use import.meta
 if (typeof process === 'undefined' || process.env.NODE_ENV !== 'test') {
   try {
-    // @ts-ignore - import.meta is defined at runtime by Vite
+    // @ts-expect-error - import.meta is defined at runtime by Vite
     apiUrl = import.meta.env?.VITE_API_URL || 'http://localhost:8000'
   } catch (e) {
     // Fallback already set

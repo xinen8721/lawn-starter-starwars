@@ -4,7 +4,7 @@ use App\Services\SearchLogService;
 use Illuminate\Support\Facades\Redis;
 
 beforeEach(function () {
-    $this->service = new SearchLogService();
+    $this->service = new SearchLogService;
 });
 
 test('logSearch stores search data in Redis', function () {
@@ -83,4 +83,3 @@ test('multiple searches aggregate correctly', function () {
     $this->service->logSearch('people', 'Leia', 3, 180);
     $this->service->logSearch('people', 'Luke', 2, 200);
 });
-

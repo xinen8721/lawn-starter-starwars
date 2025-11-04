@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class SearchLogService
 {
     const TTL_DAYS = 30; // Keep data for 30 days
+
     const TTL_SECONDS = self::TTL_DAYS * 24 * 60 * 60;
 
     /**
@@ -48,14 +49,14 @@ class SearchLogService
             $redis->incr($typeKey);
             $redis->expire($typeKey, self::TTL_SECONDS);
 
-            Log::info("Search logged to Redis", [
+            Log::info('Search logged to Redis', [
                 'type' => $normalizedType,
                 'term' => $normalizedTerm,
                 'count' => $currentCount,
                 'response_time_ms' => $responseTimeMs,
             ]);
         } catch (\Exception $e) {
-            Log::error("Failed to log search to Redis", [
+            Log::error('Failed to log search to Redis', [
                 'error' => $e->getMessage(),
                 'type' => $searchType,
                 'term' => $searchTerm,
@@ -63,4 +64,3 @@ class SearchLogService
         }
     }
 }
-
