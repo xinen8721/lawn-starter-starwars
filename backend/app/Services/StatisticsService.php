@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * StatisticsService - Calculates and caches search statistics from Redis
@@ -105,7 +105,7 @@ class StatisticsService
         }
 
         // Sort combined results by count (descending) and take top 5
-        usort($topQueries, fn($a, $b) => $b['count'] - $a['count']);
+        usort($topQueries, fn ($a, $b) => $b['count'] - $a['count']);
         $topQueries = array_slice($topQueries, 0, 5);
 
         // Calculate percentage of total for each query
@@ -136,7 +136,7 @@ class StatisticsService
                 $metaKey = "search:{$type}:{$term}:meta";
                 $meta = $redis->hgetall($metaKey);
 
-                if (!empty($meta['total_response_time']) && !empty($meta['count'])) {
+                if (! empty($meta['total_response_time']) && ! empty($meta['count'])) {
                     $totalTime += (int) $meta['total_response_time'];
                     $totalCount += (int) $meta['count'];
                 }
@@ -155,7 +155,7 @@ class StatisticsService
         $hourlyStats = [];
 
         for ($hour = 0; $hour < 24; $hour++) {
-            $hourKey = "search:hours:" . str_pad($hour, 2, '0', STR_PAD_LEFT);
+            $hourKey = 'search:hours:'.str_pad($hour, 2, '0', STR_PAD_LEFT);
             $count = (int) $redis->get($hourKey);
 
             if ($count > 0) {
@@ -167,7 +167,7 @@ class StatisticsService
         }
 
         // Sort by count descending
-        usort($hourlyStats, fn($a, $b) => $b['count'] - $a['count']);
+        usort($hourlyStats, fn ($a, $b) => $b['count'] - $a['count']);
 
         return $hourlyStats;
     }
@@ -215,11 +215,13 @@ class StatisticsService
 
         if ($cached) {
             Log::info('Statistics served from Redis cache');
+
             return $cached;
         }
 
         // Cache miss - calculate now
         Log::warning('Statistics cache miss - calculating from Redis data');
+
         return [
             'data' => $this->calculateStatistics(),
             'calculated_at' => now()->toISOString(),
@@ -245,4 +247,3 @@ class StatisticsService
         ];
     }
 }
-

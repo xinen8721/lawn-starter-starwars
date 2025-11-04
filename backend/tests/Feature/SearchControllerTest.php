@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Http;
 use App\Services\SearchLogService;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 
 beforeEach(function () {
     // Mock SearchLogService to avoid Redis dependency
@@ -14,38 +14,38 @@ beforeEach(function () {
 test('search handles empty term validation', function () {
     $response = $this->postJson('/api/search', [
         'type' => 'people',
-        'term' => ''
+        'term' => '',
     ]);
 
     $response->assertStatus(422)
         ->assertJsonStructure([
             'error',
-            'messages' => ['term']
+            'messages' => ['term'],
         ]);
 });
 
 test('search handles missing type validation', function () {
     $response = $this->postJson('/api/search', [
-        'term' => 'Luke'
+        'term' => 'Luke',
     ]);
 
     $response->assertStatus(422)
         ->assertJsonStructure([
             'error',
-            'messages' => ['type']
+            'messages' => ['type'],
         ]);
 });
 
 test('search handles invalid type validation', function () {
     $response = $this->postJson('/api/search', [
         'type' => 'invalid',
-        'term' => 'test'
+        'term' => 'test',
     ]);
 
     $response->assertStatus(422)
         ->assertJsonStructure([
             'error',
-            'messages' => ['type']
+            'messages' => ['type'],
         ]);
 });
 
@@ -54,21 +54,21 @@ test('search handles very long search term', function () {
 
     $response = $this->postJson('/api/search', [
         'type' => 'people',
-        'term' => $longTerm
+        'term' => $longTerm,
     ]);
 
     $response->assertStatus(422)
         ->assertJsonStructure([
             'error',
-            'messages' => ['term']
+            'messages' => ['term'],
         ]);
 });
 
 test('person endpoint returns 404 for invalid id', function () {
     Http::fake([
         'https://swapi.dev/api/people/99999' => Http::response([
-            'detail' => 'Not found'
-        ], 404)
+            'detail' => 'Not found',
+        ], 404),
     ]);
 
     $response = $this->getJson('/api/people/99999');
@@ -92,8 +92,8 @@ test('person endpoint returns correct data structure', function () {
             'species' => [],
             'vehicles' => [],
             'starships' => [],
-            'url' => 'https://swapi.dev/api/people/1/'
-        ], 200)
+            'url' => 'https://swapi.dev/api/people/1/',
+        ], 200),
     ]);
 
     $response = $this->getJson('/api/people/1');
@@ -110,16 +110,16 @@ test('person endpoint returns correct data structure', function () {
             'mass',
             'skin_color',
             'films' => [
-                '*' => ['id', 'url']
-            ]
+                '*' => ['id', 'url'],
+            ],
         ]);
 });
 
 test('movie endpoint returns 404 for invalid id', function () {
     Http::fake([
         'https://swapi.dev/api/films/99999' => Http::response([
-            'detail' => 'Not found'
-        ], 404)
+            'detail' => 'Not found',
+        ], 404),
     ]);
 
     $response = $this->getJson('/api/movies/99999');
@@ -141,8 +141,8 @@ test('movie endpoint returns correct data structure', function () {
             'starships' => [],
             'vehicles' => [],
             'species' => [],
-            'url' => 'https://swapi.dev/api/films/1/'
-        ], 200)
+            'url' => 'https://swapi.dev/api/films/1/',
+        ], 200),
     ]);
 
     $response = $this->getJson('/api/movies/1');
@@ -157,26 +157,26 @@ test('movie endpoint returns correct data structure', function () {
             'producer',
             'release_date',
             'characters' => [
-                '*' => ['id', 'url']
-            ]
+                '*' => ['id', 'url'],
+            ],
         ]);
 });
 
 test('search returns empty results for non-existent term', function () {
     Http::fake([
         'https://swapi.dev/api/people/*' => Http::response([
-            'results' => []
-        ], 200)
+            'results' => [],
+        ], 200),
     ]);
 
     $response = $this->postJson('/api/search', [
         'type' => 'people',
-        'term' => 'NonExistentCharacter12345'
+        'term' => 'NonExistentCharacter12345',
     ]);
 
     $response->assertStatus(200)
         ->assertJson([
-            'results' => []
+            'results' => [],
         ]);
 });
 
@@ -196,16 +196,15 @@ test('search logs metrics for successful search', function () {
     Http::fake([
         'https://swapi.dev/api/people/*' => Http::response([
             'results' => [
-                ['name' => 'Luke Skywalker', 'url' => 'https://swapi.dev/api/people/1/']
-            ]
-        ], 200)
+                ['name' => 'Luke Skywalker', 'url' => 'https://swapi.dev/api/people/1/'],
+            ],
+        ], 200),
     ]);
 
     $response = $this->postJson('/api/search', [
         'type' => 'people',
-        'term' => 'Luke'
+        'term' => 'Luke',
     ]);
 
     $response->assertStatus(200);
 });
-

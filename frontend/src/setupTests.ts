@@ -4,7 +4,8 @@ import '@testing-library/jest-dom'
 jest.mock('./constants/app')
 
 // Mock import.meta for Vite
-global.importMeta = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(global as any).importMeta = {
   env: {
     VITE_API_URL: 'http://localhost:8000',
   },

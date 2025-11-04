@@ -10,6 +10,7 @@ interface PreferencesContextType {
   setLanguage: (language: SupportedLanguage) => void
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined)
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
@@ -35,7 +36,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     document.body.className = theme === 'dark' ? 'dark-theme' : ''
     // Apply language on mount
     i18n.changeLanguage(language)
-  }, [])
+  }, [theme, language, i18n])
 
   return (
     <PreferencesContext.Provider value={{ theme, language, setTheme, setLanguage }}>

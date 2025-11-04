@@ -20,4 +20,3 @@ return [
     'http_only' => true,
     'same_site' => 'lax',
 ];
-

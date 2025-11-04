@@ -15,4 +15,3 @@ class PreventRequestsDuringMaintenance extends Middleware
         //
     ];
 }
-

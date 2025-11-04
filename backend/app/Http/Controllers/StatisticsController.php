@@ -24,9 +24,8 @@ class StatisticsController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to fetch statistics',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
 }
-

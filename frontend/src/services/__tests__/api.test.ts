@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { searchApi } from '../api'
 
 jest.mock('axios')
 const mockedAxios = axios as jest.Mocked<typeof axios>
@@ -14,6 +13,7 @@ describe('searchApi', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockedAxios.create = jest.fn(() => mockAxiosInstance as any)
   })
 
@@ -24,16 +24,15 @@ describe('searchApi', () => {
       })
 
       // Re-import to get fresh instance with mock
-      jest.isolateModules(() => {
-        const { searchApi: freshApi } = require('../api')
-        return freshApi.search('people', 'Luke').then((result: any) => {
-          expect(mockAxiosInstance.post).toHaveBeenCalledWith(
-            '/search',
-            { type: 'people', term: 'Luke' }
-          )
-          expect(result.results).toHaveLength(1)
-          expect(result.results[0].name).toBe('Luke Skywalker')
-        })
+      await jest.isolateModulesAsync(async () => {
+        const { searchApi: freshApi } = await import('../api')
+        const result = await freshApi.search('people', 'Luke')
+        expect(mockAxiosInstance.post).toHaveBeenCalledWith(
+          '/search',
+          { type: 'people', term: 'Luke' }
+        )
+        expect(result.results).toHaveLength(1)
+        expect(result.results[0].name).toBe('Luke Skywalker')
       })
     })
 
@@ -42,14 +41,13 @@ describe('searchApi', () => {
         data: { results: [{ id: 1, title: 'A New Hope' }] }
       })
 
-      jest.isolateModules(() => {
-        const { searchApi: freshApi } = require('../api')
-        return freshApi.search('movies', 'Hope').then(() => {
-          expect(mockAxiosInstance.post).toHaveBeenCalledWith(
-            '/search',
-            { type: 'movies', term: 'Hope' }
-          )
-        })
+      await jest.isolateModulesAsync(async () => {
+        const { searchApi: freshApi } = await import('../api')
+        await freshApi.search('movies', 'Hope')
+        expect(mockAxiosInstance.post).toHaveBeenCalledWith(
+          '/search',
+          { type: 'movies', term: 'Hope' }
+        )
       })
     })
   })
@@ -60,12 +58,11 @@ describe('searchApi', () => {
         data: { id: 1, name: 'Luke Skywalker' }
       })
 
-      jest.isolateModules(() => {
-        const { searchApi: freshApi } = require('../api')
-        return freshApi.getPerson(1).then((result: any) => {
-          expect(mockAxiosInstance.get).toHaveBeenCalledWith('/people/1')
-          expect(result.name).toBe('Luke Skywalker')
-        })
+      await jest.isolateModulesAsync(async () => {
+        const { searchApi: freshApi } = await import('../api')
+        const result = await freshApi.getPerson(1)
+        expect(mockAxiosInstance.get).toHaveBeenCalledWith('/people/1')
+        expect(result.name).toBe('Luke Skywalker')
       })
     })
   })
@@ -76,12 +73,11 @@ describe('searchApi', () => {
         data: { id: 1, title: 'A New Hope' }
       })
 
-      jest.isolateModules(() => {
-        const { searchApi: freshApi } = require('../api')
-        return freshApi.getMovie(1).then((result: any) => {
-          expect(mockAxiosInstance.get).toHaveBeenCalledWith('/movies/1')
-          expect(result.title).toBe('A New Hope')
-        })
+      await jest.isolateModulesAsync(async () => {
+        const { searchApi: freshApi } = await import('../api')
+        const result = await freshApi.getMovie(1)
+        expect(mockAxiosInstance.get).toHaveBeenCalledWith('/movies/1')
+        expect(result.title).toBe('A New Hope')
       })
     })
   })
@@ -89,15 +85,25 @@ describe('searchApi', () => {
   describe('getStatistics', () => {
     test('calls correct endpoint', async () => {
       mockAxiosInstance.get.mockResolvedValue({
-        data: { total_searches: 100 }
+        data: {
+          data: {
+            total_searches: 100,
+            average_response_time: 150,
+            top_queries: [],
+            popular_hours: [],
+            searches_by_type: {}
+          },
+          calculated_at: '2024-01-01T00:00:00Z',
+          calculation_time_ms: 5,
+          cached_at: '2024-01-01T00:00:00Z'
+        }
       })
 
-      jest.isolateModules(() => {
-        const { searchApi: freshApi } = require('../api')
-        return freshApi.getStatistics().then((result: any) => {
-          expect(mockAxiosInstance.get).toHaveBeenCalledWith('/statistics')
-          expect(result.total_searches).toBe(100)
-        })
+      await jest.isolateModulesAsync(async () => {
+        const { searchApi: freshApi } = await import('../api')
+        const result = await freshApi.getStatistics()
+        expect(mockAxiosInstance.get).toHaveBeenCalledWith('/statistics')
+        expect(result.data.total_searches).toBe(100)
       })
     })
   })

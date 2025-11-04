@@ -1,12 +1,11 @@
 <?php
 
 use App\Services\StatisticsService;
-use App\Services\SearchLogService;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 beforeEach(function () {
-    $this->service = new StatisticsService();
+    $this->service = new StatisticsService;
 });
 
 test('calculateStatistics returns correct structure with no data', function () {
@@ -23,7 +22,7 @@ test('calculateStatistics returns correct structure with no data', function () {
             'average_response_time',
             'top_queries',
             'popular_hours',
-            'searches_by_type'
+            'searches_by_type',
         ])
         ->and($stats['total_searches'])->toBe(0)
         ->and($stats['average_response_time'])->toBe(0.0);
@@ -32,8 +31,13 @@ test('calculateStatistics returns correct structure with no data', function () {
 test('calculateStatistics computes total searches correctly', function () {
     Redis::shouldReceive('connection')->andReturnSelf();
     Redis::shouldReceive('get')->andReturnUsing(function ($key) {
-        if ($key === 'search:type:people:count') return '2';
-        if ($key === 'search:type:movies:count') return '1';
+        if ($key === 'search:type:people:count') {
+            return '2';
+        }
+        if ($key === 'search:type:movies:count') {
+            return '1';
+        }
+
         return '0';
     });
     Redis::shouldReceive('zrevrange')->andReturn([]);
@@ -51,13 +55,14 @@ test('calculateStatistics computes average response time', function () {
     });
     Redis::shouldReceive('zrevrange')->andReturnUsing(function ($key, $start, $end, $options = []) {
         // For getTopQueries (with WITHSCORES)
-        if (!empty($options) && isset($options['WITHSCORES'])) {
+        if (! empty($options) && isset($options['WITHSCORES'])) {
             return []; // No top queries
         }
         // For getAverageResponseTime (without WITHSCORES)
         if ($key === 'search:people:top') {
             return ['Luke', 'Leia'];
         }
+
         return [];
     });
     Redis::shouldReceive('hgetall')->andReturnUsing(function ($key) {
@@ -67,6 +72,7 @@ test('calculateStatistics computes average response time', function () {
         if ($key === 'search:people:Leia:meta') {
             return ['total_response_time' => '400', 'count' => '1'];
         }
+
         return [];
     });
     Cache::shouldReceive('put')->once();
@@ -80,22 +86,29 @@ test('calculateStatistics computes average response time', function () {
 test('calculateStatistics returns top queries with percentages', function () {
     Redis::shouldReceive('connection')->andReturnSelf();
     Redis::shouldReceive('get')->andReturnUsing(function ($key) {
-        if ($key === 'search:type:people:count') return '3';
-        if ($key === 'search:type:movies:count') return '0';
+        if ($key === 'search:type:people:count') {
+            return '3';
+        }
+        if ($key === 'search:type:movies:count') {
+            return '0';
+        }
+
         return '0';
     });
     Redis::shouldReceive('zrevrange')->andReturnUsing(function ($key, $start, $end, $options = []) {
         // For getTopQueries (with WITHSCORES)
-        if (!empty($options) && isset($options['WITHSCORES'])) {
+        if (! empty($options) && isset($options['WITHSCORES'])) {
             if ($key === 'search:people:top') {
                 return ['Luke' => 2, 'Leia' => 1];
             }
+
             return [];
         }
         // For getAverageResponseTime (without WITHSCORES)
         if ($key === 'search:people:top') {
             return ['Luke', 'Leia'];
         }
+
         return [];
     });
     Redis::shouldReceive('hgetall')
@@ -117,8 +130,13 @@ test('calculateStatistics returns top queries with percentages', function () {
 test('calculateStatistics tracks searches by type', function () {
     Redis::shouldReceive('connection')->andReturnSelf();
     Redis::shouldReceive('get')->andReturnUsing(function ($key) {
-        if ($key === 'search:type:people:count') return '2';
-        if ($key === 'search:type:movies:count') return '1';
+        if ($key === 'search:type:people:count') {
+            return '2';
+        }
+        if ($key === 'search:type:movies:count') {
+            return '1';
+        }
+
         return '0';
     });
     Redis::shouldReceive('zrevrange')->andReturn([]);
@@ -138,10 +156,11 @@ test('calculateStatistics tracks popular hours', function () {
         // Return count for current hour
         if (str_starts_with($key, 'search:hours:')) {
             $hour = (int) now()->format('H');
-            if ($key === "search:hours:" . str_pad($hour, 2, '0', STR_PAD_LEFT)) {
+            if ($key === 'search:hours:'.str_pad($hour, 2, '0', STR_PAD_LEFT)) {
                 return '2';
             }
         }
+
         return '0';
     });
     Redis::shouldReceive('zrevrange')->andReturn([]);
@@ -165,10 +184,10 @@ test('getLatestStatistics returns cached statistics', function () {
             'average_response_time' => 250.0,
             'top_queries' => [],
             'popular_hours' => [],
-            'searches_by_type' => []
+            'searches_by_type' => [],
         ],
         'calculated_at' => now()->toISOString(),
-        'cached_at' => now()->toISOString()
+        'cached_at' => now()->toISOString(),
     ];
 
     Cache::shouldReceive('get')
@@ -185,21 +204,28 @@ test('getLatestStatistics returns cached statistics', function () {
 test('top queries limited to 5', function () {
     Redis::shouldReceive('connection')->andReturnSelf();
     Redis::shouldReceive('get')->andReturnUsing(function ($key) {
-        if ($key === 'search:type:people:count') return '10';
-        if ($key === 'search:type:movies:count') return '0';
+        if ($key === 'search:type:people:count') {
+            return '10';
+        }
+        if ($key === 'search:type:movies:count') {
+            return '0';
+        }
+
         return '0';
     });
     Redis::shouldReceive('zrevrange')->andReturnUsing(function ($key, $start, $end, $options = []) {
         // For getTopQueries (with WITHSCORES)
-        if (!empty($options) && isset($options['WITHSCORES'])) {
+        if (! empty($options) && isset($options['WITHSCORES'])) {
             if ($key === 'search:people:top') {
                 return [
-                    'Person1' => 10, 'Person2' => 9, 'Person3' => 8, 
-                    'Person4' => 7, 'Person5' => 6
+                    'Person1' => 10, 'Person2' => 9, 'Person3' => 8,
+                    'Person4' => 7, 'Person5' => 6,
                 ];
             }
+
             return [];
         }
+
         // For getAverageResponseTime (without WITHSCORES)
         return [];
     });
@@ -210,4 +236,3 @@ test('top queries limited to 5', function () {
 
     expect(count($stats['top_queries']))->toBeLessThanOrEqual(5);
 });
-

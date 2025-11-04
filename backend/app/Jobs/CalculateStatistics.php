@@ -61,7 +61,7 @@ class CalculateStatistics implements ShouldQueue
             Log::info('Statistics calculated successfully', ['stats' => $stats]);
         } catch (\Exception $e) {
             Log::error('Failed to calculate statistics', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e;
         }
@@ -75,11 +75,10 @@ class CalculateStatistics implements ShouldQueue
         Log::error('Statistics calculation job failed permanently', [
             'error' => $exception->getMessage(),
             'trace' => $exception->getTraceAsString(),
-            'attempts' => $this->attempts()
+            'attempts' => $this->attempts(),
         ]);
 
         // TODO: Optional - Send notification to developers
         // You could integrate with Slack, email, or monitoring service here
     }
 }
-
